@@ -24,7 +24,8 @@ export class Stack2 extends cdk.Stack {
 				physicalResourceId: PhysicalResourceId.of("GetParameter"), // 常に最新の値を取得
 			},
 			policy: AwsCustomResourcePolicy.fromSdkCalls({
-				resources: AwsCustomResourcePolicy.ANY_RESOURCE,
+				resources: AwsCustomResourcePolicy.ANY_RESOURCE, // さすがにガバガバすぎ
+				// resources: [`arn:${Aws.PARTITION}:ssm:${stack1Region}:${this.account}:parameter/${projectName}/*`],
 			}),
 		});
 
