@@ -11,7 +11,8 @@ export class Stack2 extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: cdk.StackProps) {
 		super(scope, id, props);
 
-		// AwsCustomResourceを使用してパラメータを取得
+		// AwsCustomResourceを使用してパラメータを1個取得
+		// これ実体はlambda
 		const getParameter = new AwsCustomResource(this, "GetParameter", {
 			onUpdate: {
 				service: "SSM",

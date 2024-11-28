@@ -39,3 +39,9 @@ pnpm run destory
 同一リージョンでないので、データ渡しに
 `cdk.CfnOutput()` の `exportName` / `cdk.Fn.importValue()`
 が使えない。
+
+## AwsCustomResourceのtips
+
+`lib/stack2.ts` の getParameter、いまは 1 個だけ SSM パラメータを取得しているけど、
+getParameter のかわりに getParameters を使えば
+onUpdate.parameters.Name にリストを指定できる。
