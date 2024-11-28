@@ -1,0 +1,35 @@
+{
+	"name": "cdk-cross-stack-reference1",
+	"version": "0.1.0",
+	"bin": {
+		"cdk-cross-stack-reference1": "bin/cdk-cross-stack-reference1.js"
+	},
+	"scripts": {
+		"test": "jest",
+		"format": "biome format --write . && dprint fmt && textlint --fix \"**/*.md\"",
+		"check": "biome check --write . && dprint check",
+		"bootstrap": ". ./.env && cdk bootstrap",
+		"list": "cdk list",
+		"synth": "cdk synth",
+		"deploy": ". ./.env && cdk deploy --all --require-approval never",
+		"diff": ". ./.env && cdk diff --all",
+		"destroy": ". ./.env && cdk destroy --all",
+		"build": "tsc",
+		"watch": "tsc -w",
+		"cdk": "cdk"
+	},
+	"devDependencies": {
+		"@types/jest": "^29.5.14",
+		"@types/node": "22.7.9",
+		"aws-cdk": "2.171.1",
+		"jest": "^29.7.0",
+		"ts-jest": "^29.2.5",
+		"ts-node": "^10.9.2",
+		"typescript": "~5.6.3"
+	},
+	"dependencies": {
+		"aws-cdk-lib": "2.171.1",
+		"constructs": "^10.4.2",
+		"tsx": "^4.19.2"
+	}
+}
