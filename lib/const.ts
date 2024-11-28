@@ -1,1 +1,1 @@
-export const projectName = "cdk-cross-stack-reference1";
+export const projectName = "cdk-cross-stack-reference2";

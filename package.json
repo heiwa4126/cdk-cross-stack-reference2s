@@ -1,8 +1,8 @@
 {
-	"name": "cdk-cross-stack-reference1",
+	"name": "cdk-cross-stack-reference2",
 	"version": "0.1.0",
 	"bin": {
-		"cdk-cross-stack-reference1": "bin/cdk-cross-stack-reference1.js"
+		"cdk-cross-stack-reference2": "bin/cdk-cross-stack-reference2.js"
 	},
 	"scripts": {
 		"test": "jest",

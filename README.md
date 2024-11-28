@@ -1,4 +1,4 @@
-# cdk-cross-stack-reference1
+# cdk-cross-stack-reference2
 
 複数スタック間で値を使いまわすサンプル。
 同一ユーザ同一リージョン版。
