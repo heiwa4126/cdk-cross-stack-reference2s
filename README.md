@@ -1,14 +1,14 @@
 # cdk-cross-stack-reference2
 
 複数スタック間で値を使いまわすサンプル。
-同一ユーザ同一リージョン版。
+同一ユーザで異なるリージョン版。
 
 ## スタックの内容
 
-1 個のユーザの同一リージョンに
+1 個のユーザで
 
-- stack1 で DynameDB を 1 個つくる。
-- stack2 でその DynameDB の ARN を outputs に出す。
+- stack1 で ap-northeast-1 に DynameDB を 1 個つくる。
+- stack2 で ap-northeast-3 に、その DynameDB の ARN を outputs に出す。
 
 ## 準備
 
@@ -17,7 +17,6 @@ cp .env.template .env
 ```
 
 して、 `.env` に AWS CLI プロファイル名を書く。
-stack はこのプロファイルのデフォルトリージョンに作成される。
 
 ## 実行
 
@@ -37,9 +36,6 @@ pnpm run destory
 
 ## メモ
 
-**同一ユーザ同一リージョンなら**、データ渡しに
-
-- `cdk.CfnOutput()` の `exportName` - [class CfnOutput (construct) · AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.CfnOutput.html#exportname)
-- `cdk.Fn.importValue()` - [class Fn · AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.Fn.html#static-importwbrvaluesharedvaluetoimport)
-
-が使える。
+同一リージョンでないので、データ渡しに
+`cdk.CfnOutput()` の `exportName` / `cdk.Fn.importValue()`
+が使えない。
