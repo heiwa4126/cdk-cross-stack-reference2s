@@ -37,5 +37,9 @@ pnpm run destory
 
 ## メモ
 
-同一ユーザ同一リージョンなら
-`cdk.CfnOutput()` の `exportName` が使える。
+**同一ユーザ同一リージョンなら**、データ渡しに
+
+- `cdk.CfnOutput()` の `exportName` - [class CfnOutput (construct) · AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.CfnOutput.html#exportname)
+- `cdk.Fn.importValue()` - [class Fn · AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.Fn.html#static-importwbrvaluesharedvaluetoimport)
+
+が使える。
