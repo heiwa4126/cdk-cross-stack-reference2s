@@ -40,7 +40,12 @@ pnpm run destory
 `cdk.CfnOutput()` の `exportName` / `cdk.Fn.importValue()`
 が使えない。
 
-## AwsCustomResourceのtips
+AwsCustomResource を使う。
+
+- [aws-cdk-lib.custom_resources module · AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.custom_resources-readme.html)
+- [カスタムリソースを使用してカスタムプロビジョニングロジックを作成する - AWS CloudFormation](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/template-custom-resources.html)
+
+## AwsCustomResource の tips
 
 `lib/stack2.ts` の getParameter、いまは 1 個だけ SSM パラメータを取得しているけど、
 getParameter のかわりに getParameters を使えば
