@@ -5,7 +5,7 @@ import {
 	PhysicalResourceId,
 } from "aws-cdk-lib/custom-resources";
 import type { Construct } from "constructs";
-import { ssmTableArn, stack1Region } from "./const";
+import { projectName, ssmTableArn, stack1Region } from "./const";
 
 export class Stack2 extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -24,8 +24,10 @@ export class Stack2 extends cdk.Stack {
 				physicalResourceId: PhysicalResourceId.of("GetParameter"), // 常に最新の値を取得
 			},
 			policy: AwsCustomResourcePolicy.fromSdkCalls({
-				resources: AwsCustomResourcePolicy.ANY_RESOURCE, // さすがにガバガバすぎ
-				// resources: [`arn:${Aws.PARTITION}:ssm:${stack1Region}:${this.account}:parameter/${projectName}/*`],
+				// resources: AwsCustomResourcePolicy.ANY_RESOURCE, // さすがにガバガバすぎ
+				resources: [
+					`arn:${cdk.Aws.PARTITION}:ssm:${stack1Region}:${this.account}:parameter/${projectName}/*`,
+				],
 			}),
 		});
 

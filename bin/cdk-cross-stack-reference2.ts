@@ -6,6 +6,12 @@ import { Stack2 } from "../lib/stack2";
 
 const app = new cdk.App();
 
-const stack1 = new Stack1(app, `${projectName}-stack1`, { env: { region: stack1Region } });
-const stack2 = new Stack2(app, `${projectName}-stack2`, { env: { region: stack2Region } });
+const stack1 = new Stack1(app, "stack1", {
+	stackName: `${projectName}-stack1`,
+	env: { region: stack1Region },
+});
+const stack2 = new Stack2(app, "stack2", {
+	stackName: `${projectName}-stack2`,
+	env: { region: stack2Region },
+});
 stack2.addDependency(stack1);
