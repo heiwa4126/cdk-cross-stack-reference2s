@@ -44,21 +44,21 @@ pnpm run destory
 AwsCustomResource を使って SSM パラメータ渡しにしている。
 SSM パラメータ、リソースとして管理されるので、ちゃんと destroy される。
 
-AwsCustomResourceで引っ張ってこれるものは:
+AwsCustomResource で引っ張ってこれるものは:
 
 - [class AwsCustomResource (construct) · AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.custom_resources.AwsCustomResource.html)
 - [interface AwsSdkCall · AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.custom_resources.AwsSdkCall.html)
 
 要するに「ほぼ何でもできる」みたい。
 
-今回使ったSSMのgetParameterはこれ。
+今回使った SSM の getParameter はこれ。
 
 - [getParameter - Class: AWS.SSM — AWS SDK for JavaScript](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SSM.html#getParameter-property)
 - [GetParameter - AWS Systems Manager](https://docs.aws.amazon.com/ja_jp/systems-manager/latest/APIReference/API_GetParameter.html)
 
 **CfnOutput でもできるらしい。**
-たぶん SSMパラメータよりいい。
-(SSMパラメータはユーザ+リージョンのリソースで、他とぶつかるかもしれない)。
+たぶん SSM パラメータよりいい。
+(SSM パラメータはユーザ+リージョンのリソースで、他とぶつかるかもしれない)。
 
 ## AwsCustomResource の tips
 
