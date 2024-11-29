@@ -1,7 +1,7 @@
 # cdk-cross-stack-reference2
 
 複数スタック間で値を使いまわすサンプル。
-同一ユーザで異なるリージョン版。
+同一ユーザで異なるリージョン。SSM パラメータ渡し版。
 
 ## スタックの内容
 
@@ -40,14 +40,31 @@ pnpm run destory
 `cdk.CfnOutput()` の `exportName` / `cdk.Fn.importValue()`
 が使えない。
 
-AwsCustomResource を使って SSM パラメータ渡しにする。(CfnOutput でもできるらしい)。
-SSM パラメータ、ちゃんと destroy されるのがすごい。
+ここでは
+AwsCustomResource を使って SSM パラメータ渡しにしている。
+SSM パラメータ、リソースとして管理されるので、ちゃんと destroy される。
+
+AwsCustomResourceで引っ張ってこれるものは:
+
+- [class AwsCustomResource (construct) · AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.custom_resources.AwsCustomResource.html)
+- [interface AwsSdkCall · AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.custom_resources.AwsSdkCall.html)
+
+要するに「ほぼ何でもできる」みたい。
+
+今回使ったSSMのgetParameterはこれ。
+
+- [getParameter - Class: AWS.SSM — AWS SDK for JavaScript](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SSM.html#getParameter-property)
+- [GetParameter - AWS Systems Manager](https://docs.aws.amazon.com/ja_jp/systems-manager/latest/APIReference/API_GetParameter.html)
+
+**CfnOutput でもできるらしい。**
+たぶん SSMパラメータよりいい。
+(SSMパラメータはユーザ+リージョンのリソースで、他とぶつかるかもしれない)。
 
 ## AwsCustomResource の tips
 
-- [aws-cdk-lib.custom_resources module · AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.custom_resources-readme.html)
 - [カスタムリソースを使用してカスタムプロビジョニングロジックを作成する - AWS CloudFormation](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/template-custom-resources.html)
 
 `lib/stack2.ts` の getParameter、いまは 1 個だけ SSM パラメータを取得しているけど、
 getParameter のかわりに getParameters を使えば
 onUpdate.parameters.Name にリストを指定できる。
+[getParameters() - Class: AWS.SSM — AWS SDK for JavaScript](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SSM.html#getParameters-property)
