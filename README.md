@@ -2,7 +2,9 @@
 
 複数スタック間で値を使いまわすサンプル。
 同一ユーザで異なるリージョン。
-CDK の AwsCustomResource を使って SSM パラメータ渡し版。
+
+CDK の AwsCustomResource (中身は Lambda-backed custom resources) を使って
+SSM パラメータ渡し版。
 
 ## スタックの内容
 
@@ -10,6 +12,8 @@ CDK の AwsCustomResource を使って SSM パラメータ渡し版。
 
 - stack1 で ap-northeast-1 に DynameDB を 1 個つくる。
 - stack2 で ap-northeast-3 に、その DynameDB の ARN を outputs に出す。
+
+非実用的だが、シンプルではある。
 
 ## 準備
 
