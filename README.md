@@ -96,7 +96,8 @@ physicalResourceId を毎回更新しないと値を見に行ってくれない�
 
 (getResponseField()は CFn で Fn::GetAtt になる)
 
-AwsCustomResource では扱いかねるので、自前で Lambda を書くしかない(めんどうなので挫折中)。
+AwsCustomResource では扱いかねるので、自前で Lambda を書くしかない
+(めんどくさくて挫折中。参考: [cfn-response モジュール - AWS CloudFormation](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html#cfn-lambda-function-code-cfnresponsemodule-source-nodejs))。
 
 ### AwsCustomResource の tips
 
@@ -106,3 +107,20 @@ onUpdate.parameters.Name にリストを指定できる。
 [getParameters() - Class: AWS.SSM — AWS SDK for JavaScript](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SSM.html#getParameters-property)
 
 SSM パラメータが複数ある場合は楽だと思う。
+
+ssm.StringListParameter()で書いて、get-parameter**s** で取るらしい。試す。
+
+いずれにしても SSM パラメータはサイズ制限があって:
+
+- String パラメータ: 最大サイズは 4KB。
+- StringList パラメータ: こちらも同様に、合計で 4KB、リスト内の各要素は最大 1KB まで。
+
+## おまけ: CDK for Terraform(CDKTF)
+
+CDKTF だと
+
+1. Terraform の Remote State を利用する
+2. SSM パラメータを利用する (今回と同じ)
+3. AWS Resource Access Manager(RAM)を利用。(使えるリソースが超限定される)
+
+どの手法でも AWS CDK よりずっと楽に書けるらしい。
