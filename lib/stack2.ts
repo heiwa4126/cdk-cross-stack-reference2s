@@ -13,7 +13,6 @@ export class Stack2 extends cdk.Stack {
 		super(scope, id, props);
 
 		// AwsCustomResourceを使用してパラメータを1個取得
-		// これ実体はlambda
 		const getParameter = new AwsCustomResource(this, "GetParameter", {
 			onUpdate: {
 				service: "SSM",
@@ -29,8 +28,18 @@ export class Stack2 extends cdk.Stack {
 				// resources: AwsCustomResourcePolicy.ANY_RESOURCE, // さすがにガバガバすぎ
 				resources: [
 					`arn:${cdk.Aws.PARTITION}:ssm:${stack1Region}:${this.account}:parameter/${projectName}/*`,
+					// .fromSdkCalls()を使うと↑のserviceとactionから↓で書いたポリシーを生成してくれる。
 				],
 			}),
+			// policy: AwsCustomResourcePolicy.fromStatements([
+			// 	new cdk.aws_iam.PolicyStatement({
+			// 		actions: ["ssm:GetParameter"],
+			// 		resources: [
+			// 			`arn:${cdk.Aws.PARTITION}:ssm:${stack1Region}:${this.account}:parameter/${projectName}/*`,
+			// 		],
+			// 		effect: cdk.aws_iam.Effect.ALLOW,
+			// 	}),
+			// ]),
 			logGroup: new logs.LogGroup(this, "GetParameterLogGroup", {
 				// ちゃんとロググループを作らないと、cdk destoryで消えない。
 				retention: logs.RetentionDays.ONE_WEEK,
