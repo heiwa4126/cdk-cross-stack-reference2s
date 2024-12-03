@@ -1,7 +1,8 @@
 # cdk-cross-stack-reference2
 
 複数スタック間で値を使いまわすサンプル。
-同一ユーザで異なるリージョン。SSM パラメータ渡し版。
+同一ユーザで異なるリージョン。
+CDK の AwsCustomResource を使って SSM パラメータ渡し版。
 
 ## スタックの内容
 
@@ -56,15 +57,52 @@ AwsCustomResource で引っ張ってこれるものは:
 - [getParameter - Class: AWS.SSM — AWS SDK for JavaScript](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SSM.html#getParameter-property)
 - [GetParameter - AWS Systems Manager](https://docs.aws.amazon.com/ja_jp/systems-manager/latest/APIReference/API_GetParameter.html)
 
-**CfnOutput でもできるらしい。**
-たぶん SSM パラメータよりいい。
+AwsCustomResource は
+[Lambda を使用するカスタムリソース - AWS CloudFormation](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/template-custom-resources-lambda.html)
+のラッパーで、実体は "Lambda-backed custom resources" というもの。
+
+AWS 公式の説明はよくわからないので、以下参照。
+[Cloudformationのカスタムリソースについて簡単解説 #AWS - Qiita](https://qiita.com/deask/items/dd61c66f893ac114252f)
+
+### 今回のカスタムリソースの使い方でダメなところ
+
+physicalResourceId を毎回更新しないと値を見に行ってくれない。
+つまり
+`cdk diff` で stack2 のほうは毎回 diff ありになるし、
+`cdk deploy` で stack2 は毎回デプロイされる。
+
+元の SSM パラメータに変更がないばあいは
+カスタムリソース 1 個が更新対象になるだけなので、
+重い処理ではないのだけど、気持ちが悪い。
+
+もし、「スタック間で物理 ID や ARN をあらかじめ決め打ち」で解決できるなら、そのほうがいい。
+
+「スタック 1 を作って、その Outputs を AWS CLI で取って、それをスタック 2 に与える」みたいなことをやってるなら、
+今回のように AwsCustomResource を使うほうがいいと思う。
+
+### メモ: CfnOutputでもできるらしい
+
+たぶん SSM パラメータよりいいのでは?
 (SSM パラメータはユーザ+リージョンのリソースで、他とぶつかるかもしれない)。
 
-## AwsCustomResource の tips
+と思ったんだけどうまくいかなかった。
+[DescribeStacks - AWS CloudFormation](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/APIReference/API_DescribeStacks.html) の戻り値が
 
-- [カスタムリソースを使用してカスタムプロビジョニングロジックを作成する - AWS CloudFormation](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/template-custom-resources.html)
+[getResponseField\(dataPath\)](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.custom_resources.AwsCustomResource.html#getwbrresponsewbrfielddatapath)も getResponseFieldReference(dataPath)も
+リーフノードしか取得できない。
+
+- NG: getResponseField("Stacks.0.Outputs");
+- OK: getResponseField("Stacks.0.Outputs.0.OutputValue");
+
+(getResponseField()は CFn で Fn::GetAtt になる)
+
+AwsCustomResource では扱いかねるので、自前で Lambda を書くしかない(めんどうなので挫折中)。
+
+### AwsCustomResource の tips
 
 `lib/stack2.ts` の getParameter、いまは 1 個だけ SSM パラメータを取得しているけど、
 getParameter のかわりに getParameters を使えば
 onUpdate.parameters.Name にリストを指定できる。
 [getParameters() - Class: AWS.SSM — AWS SDK for JavaScript](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SSM.html#getParameters-property)
+
+SSM パラメータが複数ある場合は楽だと思う。
