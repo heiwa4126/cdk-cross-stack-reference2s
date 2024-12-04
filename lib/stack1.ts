@@ -2,7 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import type { Construct } from "constructs";
-import { projectName, ssmTableArn } from "./const";
+import { projectName, ssmStack1parameters } from "./const";
 
 export class Stack1 extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -16,9 +16,9 @@ export class Stack1 extends cdk.Stack {
 		});
 
 		// SSMパラメータにtableArnを書き込む
-		new ssm.StringParameter(this, "SSMTableArn", {
-			parameterName: ssmTableArn,
-			stringValue: table.tableArn,
+		new ssm.StringListParameter(this, "Stack1Parameters", {
+			parameterName: ssmStack1parameters,
+			stringListValue: [table.tableArn],
 		});
 	}
 }

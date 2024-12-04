@@ -6,30 +6,32 @@ import {
 	PhysicalResourceId,
 } from "aws-cdk-lib/custom-resources";
 import type { Construct } from "constructs";
-import { projectName, ssmTableArn, stack1Region } from "./const";
+import { ssmStack1parameters, stack1Region } from "./const";
 
 export class Stack2 extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: cdk.StackProps) {
 		super(scope, id, props);
 
-		// AwsCustomResourceを使用してパラメータを1個取得
-		const getParameter = new AwsCustomResource(this, "GetParameter", {
+		// AwsCustomResourceを使用してパラメータを取得
+		// このへん補完がまるで効かないので注意。
+		const getParameters = new AwsCustomResource(this, "GetParameters", {
 			onUpdate: {
 				service: "SSM",
-				action: "getParameter",
+				action: "getParameters",
 				parameters: {
-					Name: ssmTableArn,
+					// see https://docs.aws.amazon.com/systems-manager/latest/APIReference/API_GetParameters.html#API_GetParameters_RequestParameters
+					Names: [ssmStack1parameters],
 				},
 				region: stack1Region, // パラメータが存在するリージョン
 				// physicalResourceId: PhysicalResourceId.of("GetParameter"),
 				physicalResourceId: PhysicalResourceId.of(Date.now().toString()), // 毎回新しい値を取得
 			},
 			policy: AwsCustomResourcePolicy.fromSdkCalls({
-				// resources: AwsCustomResourcePolicy.ANY_RESOURCE, // さすがにガバガバすぎ
-				resources: [
-					`arn:${cdk.Aws.PARTITION}:ssm:${stack1Region}:${this.account}:parameter/${projectName}/*`,
-					// .fromSdkCalls()を使うと↑のserviceとactionから↓で書いたポリシーを生成してくれる。
-				],
+				resources: AwsCustomResourcePolicy.ANY_RESOURCE, // さすがにガバガバすぎ
+				// resources: [
+				// 	`arn:${cdk.Aws.PARTITION}:ssm:${stack1Region}:${this.account}:parameter/${projectName}/*`,
+				// 	// .fromSdkCalls()を使うと↑のserviceとactionから↓で書いたポリシーを生成してくれる。
+				// ],
 			}),
 			// policy: AwsCustomResourcePolicy.fromStatements([
 			// 	new cdk.aws_iam.PolicyStatement({
@@ -50,7 +52,8 @@ export class Stack2 extends cdk.Stack {
 		});
 
 		// パラメータの値を取得
-		const tableArn = getParameter.getResponseField("Parameter.Value");
+		// see: https://docs.aws.amazon.com/systems-manager/latest/APIReference/API_GetParameters.html#API_GetParameters_ResponseSyntax
+		const tableArn = getParameters.getResponseField("Parameters.0.Value");
 
 		new cdk.CfnOutput(this, "Stack1TableArnOutput", {
 			value: tableArn,
