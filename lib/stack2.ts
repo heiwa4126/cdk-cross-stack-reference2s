@@ -6,7 +6,7 @@ import {
 	PhysicalResourceId,
 } from "aws-cdk-lib/custom-resources";
 import type { Construct } from "constructs";
-import { ssmStack1parameters, stack1Region } from "./const";
+import { projectName, ssmStack1parameters, stack1Region } from "./const";
 
 export class Stack2 extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -23,19 +23,20 @@ export class Stack2 extends cdk.Stack {
 					Names: [ssmStack1parameters],
 				},
 				region: stack1Region, // パラメータが存在するリージョン
-				// physicalResourceId: PhysicalResourceId.of("GetParameter"),
-				physicalResourceId: PhysicalResourceId.of(Date.now().toString()), // 毎回新しい値を取得
+				physicalResourceId: PhysicalResourceId.of(`/${projectName}/${Date.now().toString()}`),
+				// ↑毎回新しい値かつプロジェクトにちなんだID。
+				// この文字列になるわけではないが、それっぽい物理名になる。
 			},
 			policy: AwsCustomResourcePolicy.fromSdkCalls({
-				resources: AwsCustomResourcePolicy.ANY_RESOURCE, // さすがにガバガバすぎ
-				// resources: [
-				// 	`arn:${cdk.Aws.PARTITION}:ssm:${stack1Region}:${this.account}:parameter/${projectName}/*`,
-				// 	// .fromSdkCalls()を使うと↑のserviceとactionから↓で書いたポリシーを生成してくれる。
-				// ],
+				// resources: AwsCustomResourcePolicy.ANY_RESOURCE, // さすがにガバガバすぎ
+				resources: [
+					`arn:${cdk.Aws.PARTITION}:ssm:${stack1Region}:${this.account}:parameter/${projectName}/*`,
+					// .fromSdkCalls()を使うと↑のserviceとactionから↓で書いたポリシーを生成してくれる。
+				],
 			}),
 			// policy: AwsCustomResourcePolicy.fromStatements([
 			// 	new cdk.aws_iam.PolicyStatement({
-			// 		actions: ["ssm:GetParameter"],
+			// 		actions: ["ssm:GetParameters"],
 			// 		resources: [
 			// 			`arn:${cdk.Aws.PARTITION}:ssm:${stack1Region}:${this.account}:parameter/${projectName}/*`,
 			// 		],
