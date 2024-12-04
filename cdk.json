@@ -1,6 +1,6 @@
 {
-	"app": "tsx bin/cdk-cross-stack-reference2.ts",
-	"_app": "npx ts-node --prefer-ts-exts bin/cdk-cross-stack-reference2.ts",
+	"app": "tsx bin/cdk-cross-stack-reference2s.ts",
+	"_app": "npx ts-node --prefer-ts-exts bin/cdk-cross-stack-reference2s.ts",
 	"watch": {
 		"include": ["**"],
 		"exclude": [
