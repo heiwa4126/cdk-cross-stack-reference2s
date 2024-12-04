@@ -5,6 +5,7 @@ import { Stack1 } from "../lib/stack1";
 import { Stack2 } from "../lib/stack2";
 
 const app = new cdk.App();
+cdk.Tags.of(app).add("Project", projectName);
 
 const stack1 = new Stack1(app, "stack1", {
 	stackName: `${projectName}-stack1`,
